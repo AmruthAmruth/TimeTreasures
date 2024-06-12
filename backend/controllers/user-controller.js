@@ -1,17 +1,30 @@
 
+import { json } from 'express';
 import User from '../model/UserModel.js';
 import bcrypt from 'bcrypt'
 
 export const userSignup= async(req,res)=>{
     const {name,email ,password}=req.body;
+    let exsitingUser;
+   try{
+        exsitingUser = await User.findOne({email})
+   }catch(err){
+    return console.log(err);
+   }
+
+   if(exsitingUser){
+    return res.json({message:"You Already Have An Account."})
+   }else{
+
+   
     const hashPassword=bcrypt.hashSync(password,10)
     let user;
     try{
         user =  new User({
             name,
-            email,
+            email, 
             password:hashPassword
-        }) 
+        })  
       user=await user.save()
 }catch(err){
     return console.log(err);
@@ -21,6 +34,7 @@ if(!user){
 }else{
     return res.json({user})
 }
+   }
 }
 
 
