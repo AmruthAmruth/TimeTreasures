@@ -1,5 +1,6 @@
 import AdminModel from "../model/AdminModel.js";
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export const adminSignup=async(req,res)=>{
     const {name, email,password}=req.body
@@ -32,6 +33,7 @@ export const adminSignup=async(req,res)=>{
     }
 }
 
+
 export const adminLogin=async(req,res)=>{
     const {email,password}=req.body
     let existingAdmin;
@@ -44,10 +46,15 @@ export const adminLogin=async(req,res)=>{
         return res.json({message:"Admin Not Found"})
     }else{
        let isPasswordCorrect=bcrypt.compareSync(password,existingAdmin.password)
-       if(isPasswordCorrect){
-        return res.json({message:"Admin Authentication Completed"})
-       }else{
-        return res.json({message:"Incorect Password"})
-       }
+
+       
+       if (isPasswordCorrect) {
+        const adminData = existingAdmin.toObject ? existingAdmin.toObject() : { ...existingAdmin };   
+        const token = jwt.sign(adminData, process.env.SECRET_KEY, { expiresIn: "7d" });
+        return res.json({ message: "Admin Authentication Completed", token });
+    } else {
+        return res.json({ message: "Incorrect Password" });
+    }
+    
     }
 }

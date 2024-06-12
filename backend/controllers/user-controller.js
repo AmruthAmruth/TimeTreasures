@@ -1,7 +1,7 @@
 
-import { json } from 'express';
 import User from '../model/UserModel.js';
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 export const userSignup= async(req,res)=>{
     const {name,email ,password}=req.body;
@@ -54,7 +54,9 @@ export const userLogin= async(req,res)=>{
         if(!isPasswordCorrect){
             return res.json({message:"Incorrect Password."})
         }else{
-            return res.json({message:"Login Successfully.!",exsitingUser})
+            const userData = exsitingUser.toObject ? exsitingUser.toObject() : { ...exsitingUser };   
+        const token = jwt.sign(userData, process.env.SECRET_KEY, { expiresIn: "7d" });
+        return res.json({ message: "Authentication Completed", token });
         }
     }
 }
