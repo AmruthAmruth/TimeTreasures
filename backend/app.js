@@ -3,21 +3,18 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRouter from './routes/user-routes.js';
 import adminRouter from './routes/admin-routes.js';
+import productRouter from './routes/product-routes.js';
 
 const app = express();
 dotenv.config();
 app.use(express.json());
 const PORT = process.env.PORT | 5000
 
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/user',userRouter)
 app.use('/admin',adminRouter)
-
-
-
-
-
-
+app.use('/product',productRouter)
 
 
 
