@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-
+ 
 const productSchema = mongoose.Schema({
-    brand:{
+    brand:{ 
         type:String,
         require:true
     },

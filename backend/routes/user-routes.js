@@ -7,7 +7,7 @@ const userRouter = express.Router()
 
 userRouter.post('/',userSignup) 
 userRouter.post('/login',userLogin) 
-userRouter.get('/',verifyToken,getAlluser) 
+userRouter.get('/',getAlluser) 
 userRouter.get('/:id',getUserById)
 userRouter.delete('/:id',deleteUserById)
 export default userRouter  
